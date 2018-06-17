@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/yifei/CLionProjects/TicTacToe/main.cpp
+mainFunctions.cpp
+/Users/yifei/CLionProjects/TicTacToe/mainFunctions.cpp
+
+/Users/yifei/CLionProjects/TicTacToe/mainClasses.cpp
+iostream
+-
+iomanip
+-
+
+/Users/yifei/CLionProjects/TicTacToe/mainFunctions.cpp
+iostream
+-
+mainClasses.cpp
+/Users/yifei/CLionProjects/TicTacToe/mainClasses.cpp
+
