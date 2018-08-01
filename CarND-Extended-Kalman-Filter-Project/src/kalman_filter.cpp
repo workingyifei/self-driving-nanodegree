@@ -30,7 +30,7 @@ void KalmanFilter:: Predict() {
   x_ = F_ * x_;
   MatrixXd Ft = F_.transpose();
   P_ = F_ * P_ * Ft + Q_;
-  std::cout << "Predict success1"<<std::endl;
+
 }
 
 void KalmanFilter::Update(const VectorXd &z) {
@@ -49,7 +49,6 @@ void KalmanFilter::Update(const VectorXd &z) {
   long x_size = x_.size();
   MatrixXd I = MatrixXd::Identity(x_size, x_size);
   P_ = (I - K*H_) * P_;
-  std::cout<<"update success"<<std::endl;
 
 }
 
@@ -92,5 +91,5 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   long x_size = x_.size();
   MatrixXd I = MatrixXd::Identity(x_size, x_size);
   P_ = (I - K*H_) * P_;
-  std::cout<<"EKF update success"<<std::endl;
+
 }

@@ -66,7 +66,6 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     // first measurement
     cout << "EKF: " << endl;
     ekf_.x_  = VectorXd(4);
-//    ekf_.x_ << 1, 1, 1, 1;
 
     //init the kalman filter
     ekf_.P_ << 1, 0, 0, 0,
