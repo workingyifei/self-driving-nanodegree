@@ -23,6 +23,12 @@ public:
   // measurement covariance matrix
   Eigen::MatrixXd R_;
 
+  // kalman filter gain
+  Eigen::MatrixXd K;
+
+  // measurement and prediction difference
+  Eigen::VectorXd y;
+
   /**
    * Constructor
    */
