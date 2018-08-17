@@ -25,10 +25,10 @@ UKF::UKF() {
   P_ = MatrixXd(5, 5);
 
   // Process noise standard deviation longitudinal acceleration in m/s^2
-  std_a_ = 30;
+  std_a_ = 3;
 
   // Process noise standard deviation yaw acceleration in rad/s^2
-  std_yawdd_ = 30;
+  std_yawdd_ = 3;
 
   //DO NOT MODIFY measurement noise values below these are provided by the sensor manufacturer.
   // Laser measurement noise standard deviation position1 in m
@@ -70,31 +70,33 @@ UKF::UKF() {
   }
 
   //create sigma point matrix
-  MatrixXd Xsig_ = MatrixXd(n_x_, 2 * n_x_ + 1);
+  Xsig_ = MatrixXd(n_x_, 2 * n_x_ + 1);
 
   //create augmented sigma point matrix
-  MatrixXd Xsig_aug_ = MatrixXd(n_aug_, 2 * n_aug_+ 1);
+  Xsig_aug_ = MatrixXd(n_aug_, 2 * n_aug_+ 1);
 
   //create predicted sigma points matrix
-  MatrixXd Xsig_pred = MatrixXd(n_x_, 2 * n_aug_ + 1);
+  Xsig_pred_ = MatrixXd(n_x_, 2 * n_aug_ + 1);
 
-  MatrixXd H_laser_ = MatrixXd(2, 4);
-  H_laser_ << 1, 0, 0, 0,
-          0, 1, 0, 0;
+  H_laser_ = MatrixXd(2, 5);
+  H_laser_ << 1, 0, 0, 0, 0,
+              0, 1, 0, 0, 0;
 
   //no need to define H_radar,
   //since radar measurement function is non-linear,
   // we use unscented transformation (approxiamted by sigma points),
   // to generate predicted radar measurement
 
-  MatrixXd R_laser_ = MatrixXd(n_z_laser_, n_z_laser_);
+  R_laser_ = MatrixXd(n_z_laser_, n_z_laser_);
   R_laser_ << std_laspx_*std_laspx_, 0,
               0, std_laspy_*std_laspy_;
 
-  MatrixXd R_radar_ = MatrixXd(n_z_radar_,n_z_radar_);
+  R_radar_ = MatrixXd(n_z_radar_, n_z_radar_);
   R_radar_ << std_radr_*std_radr_, 0, 0,
              0, std_radphi_*std_radphi_, 0,
              0, 0,std_radrd_*std_radrd_;
+
+  cout << "constructor done" << endl;
 }
 
 UKF::~UKF() {}
@@ -142,6 +144,9 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
   else if (meas_package.sensor_type_ == MeasurementPackage::RADAR) {
     UpdateRadar(meas_package);
   }
+
+  cout << "process measurement done" << endl;
+
 }
 
 
@@ -204,7 +209,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   MatrixXd Zsig_ = MatrixXd(n_z_radar_, 2 * n_aug_ + 1);
 
   for (int j = 0; j < 2 * n_aug_ + 1; ++j) {
-    // extract values for better readibility
+    // extract values for better readability
     double p_x = Xsig_pred_(0, j);
     double p_y = Xsig_pred_(1, j);
     double v = Xsig_pred_(2, j);
@@ -218,7 +223,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
     if (Zsig_(0, j) < 0.00001)
       Zsig_(0, j) = 0.00001;
     Zsig_(1, j) = atan2(p_y, p_x);                                      //phi
-    Zsig_(2, j) = (p_x * v1 + p_y * v2) / sqrt(p_x * p_x + p_y * p_y);  //r_dot
+    Zsig_(2, j) = (p_x * v1 + p_y * v2) / Zsig_(0, j);  //r_dot
   }
 
   //mean predicted measurement
