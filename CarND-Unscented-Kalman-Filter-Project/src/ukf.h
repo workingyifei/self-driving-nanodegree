@@ -52,11 +52,14 @@ public:
   ///* Radar measurement noise standard deviation radius change in m/s
   double std_radrd_ ;
 
-  ///* Weights of sigma points
-  VectorXd weights_;
-
   ///* State dimension
   int n_x_;
+
+  ///* Laser measurement dimension
+  int n_z_laser_;
+
+  ///* Radar measurement dimension
+  int n_z_radar_;
 
   ///* Augmented state dimension
   int n_aug_;
@@ -64,8 +67,11 @@ public:
   ///* Sigma point spreading parameter
   double lambda_;
 
+  ///* Weights
+  VectorXd weights;
+
   ///* sigma point matrix
-  MatrixXd Xsig_ = MatrixXd(n_x_, 2 * n_x_ + 1);
+  MatrixXd Xsig_;
 
   ///* predicted augmented sigma points matrix
   MatrixXd Xsig_aug_;
@@ -73,8 +79,14 @@ public:
   ///* predicted sigma points matrix
   MatrixXd Xsig_pred_;
 
-  // previous timestamp
-  long long previous_timestamp_;
+  ///* measurement function matrix for laser
+  MatrixXd H_laser_;
+
+  ///* measurement noise matrix for laser
+  MatrixXd R_laser_;
+
+  ///* measurement noise matrix for radar
+  MatrixXd R_radar_;
 
 
   /**
@@ -116,7 +128,7 @@ public:
 
   void AugmentedSigmaPoints();
 
-  void SigmaPointPrediction(double dt);
+  void SigmaPointPrediction(double delta_t);
 
   void PredictMeanAndCovariance();
 };
