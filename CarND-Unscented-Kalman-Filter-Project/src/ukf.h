@@ -28,9 +28,6 @@ public:
   ///* state covariance matrix
   MatrixXd P_;
 
-  ///* predicted sigma points matrix
-  MatrixXd Xsig_pred_;
-
   ///* time when the state is true, in us
   long long time_us_;
 
@@ -67,6 +64,18 @@ public:
   ///* Sigma point spreading parameter
   double lambda_;
 
+  ///* sigma point matrix
+  MatrixXd Xsig_ = MatrixXd(n_x_, 2 * n_x_ + 1);
+
+  ///* predicted augmented sigma points matrix
+  MatrixXd Xsig_aug_;
+
+  ///* predicted sigma points matrix
+  MatrixXd Xsig_pred_;
+
+  // previous timestamp
+  long long previous_timestamp_;
+
 
   /**
    * Constructor
@@ -83,12 +92,6 @@ public:
    * @param meas_package The latest measurement data of either radar or laser
    */
   void ProcessMeasurement(MeasurementPackage meas_package);
-
-  // helper functions
-  void PredictMeanAndCovariance(VectorXd* x_pred, MatrixXd* P_pred);
-  void PredictRadarMeasurement(VectorXd* z_out, MatrixXd* S_out);
-  void UpdateState(VectorXd* x_out, MatrixXd* P_out);
-
 
     /**
    * Prediction Predicts sigma points, the state, and the state covariance
@@ -108,6 +111,14 @@ public:
    * @param meas_package The measurement at k+1
    */
   void UpdateRadar(MeasurementPackage meas_package);
+
+  void GenerateSigmaPoints();
+
+  void AugmentedSigmaPoints();
+
+  void SigmaPointPrediction(double dt);
+
+  void PredictMeanAndCovariance();
 };
 
 #endif /* UKF_H */
