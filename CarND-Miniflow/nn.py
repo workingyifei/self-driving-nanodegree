@@ -1,19 +1,20 @@
 from miniflow import *
 
-x, y, z = Input(), Input(), Input()
 
-f = Add(x, y, z)
-g = Mul(x, y, z)
+inputs, weights, bias = Input(), Input(), Input()
 
-feed_dict = {x: 10, y: 5, z: 1}
-
-sorted_neurons = topological_sort(feed_dict)
-output1 = forward_pass(f, sorted_neurons)
-output2 = forward_pass(g, sorted_neurons)
+f = Linear(inputs, weights, bias)
 
 
-print("{} + {} + {} = {} (according to miniflow)".format(feed_dict[x],
-feed_dict[y], feed_dict[z], output1))
+x = np.array([[-1., -2.], [-1, -2]])
+w = np.array([[2., -3], [2., -3]])
+b = np.array([-3., -5])
 
-print("{} * {} * {} = {} (according to miniflow)".format(feed_dict[x],
-feed_dict[y], feed_dict[z], output2))
+feed_dict = {inputs: x, weights: w, bias: b}
+
+graph = topological_sort(feed_dict)
+output = forward_pass(f, graph)
+
+
+print("linear output (according to miniflow) is: {}".format(output))
+

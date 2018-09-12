@@ -1,3 +1,5 @@
+import numpy as np
+
 class Neuron():
 	def __init__(self, inbound_neurons=[]):
 		self.inbound_neurons = inbound_neurons
@@ -23,23 +25,16 @@ class Input(Neuron):
 		 	self.value = value
 
 
-class Add(Neuron):
-	def __init__(self, *inputs):
-		Neuron.__init__(self, inputs)
+class Linear(Neuron):
+	def __init__(self, inputs, weights, bias):
+		Neuron.__init__(self, [inputs, weights, bias])
 
 	def forward(self):
-		self.value = 0
-		for i in range(len(self.inbound_neurons)):
-			self.value += self.inbound_neurons[i].value
+		inputs = self.inbound_neurons[0].value
+		weights = self.inbound_neurons[1].value
+		bias = self.inbound_neurons[2].value
 
-class Mul(Neuron):
-	def __init__(self, *inputs):
-		Neuron.__init__(self, inputs)
-
-	def forward(self):
-		self.value = 1 
-		for i in range(len(self.inbound_neurons)):
-			self.value = self.value * self.inbound_neurons[i].value
+		self.value = np.dot(inputs, weights) + np.array([bias, bias])
 
 def topological_sort(feed_dict):
 	input_neurons = [n for n in feed_dict.keys()]
