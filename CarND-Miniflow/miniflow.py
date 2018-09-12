@@ -47,6 +47,19 @@ class Sigmoid(Neuron):
 	def forward(self):
 		self.value = self.sigmoid(self.inbound_neurons[0].value)
 
+class MSE(Neuron):
+	def __init__(self, output, ideal_output):
+		Neuron.__init__(self, [output, ideal_output])
+
+	def forward(self):
+		output = self.inbound_neurons[0].value.reshape(-1, 1)
+		ideal_output = self.inbound_neurons[1].value.reshape(-1, 1)
+		m = self.inbound_neurons[0].value.shape[0]
+
+		diff = output - ideal_output
+		self.value = np.mean(diff**2)
+
+
 def topological_sort(feed_dict):
 	input_neurons = [n for n in feed_dict.keys()]
 	G = {}
