@@ -36,6 +36,17 @@ class Linear(Neuron):
 
 		self.value = np.dot(inputs, weights) + np.array([bias, bias])
 
+
+class Sigmoid(Neuron):
+	def __init__(self, neuron):
+		Neuron.__init__(self, [neuron])
+
+	def sigmoid(self, x):
+		return 1. / (1. + np.exp(-x))
+
+	def forward(self):
+		self.value = self.sigmoid(self.inbound_neurons[0].value)
+
 def topological_sort(feed_dict):
 	input_neurons = [n for n in feed_dict.keys()]
 	G = {}
@@ -75,3 +86,5 @@ def forward_pass(output_neuron, sorted_neurons):
         n.forward()
 
     return output_neuron.value
+
+
