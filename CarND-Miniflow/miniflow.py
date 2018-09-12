@@ -15,6 +15,10 @@ class Neuron():
 
 		if value is not None:
 			self.value = value
+	def backward(self):
+		raise NotImplementedError
+
+
 
 class Input(Neuron):
 	def __init__(self):
@@ -46,6 +50,14 @@ class Sigmoid(Neuron):
 
 	def forward(self):
 		self.value = self.sigmoid(self.inbound_neurons[0].value)
+
+	def backward(self):
+		self.gradients = {n: np.zeros_like(n.value) for n in self.inbound_neurons}
+		for n in self.outbound_neurons:
+			gard_cost = n.gradients[self]
+			sigmoid = self.value
+			grad_cost = n.gradients[self.inbound_neurons[0]] += sigmoid * (1 - sigmoid) * grad_cost
+
 
 class MSE(Neuron):
 	def __init__(self, output, ideal_output):
@@ -93,11 +105,12 @@ def topological_sort(feed_dict):
 	return L
 
 
-def forward_pass(output_neuron, sorted_neurons):
+def forward_and_backward(graph):
 
-    for n in sorted_neurons:
+    for n in graph:
         n.forward()
 
-    return output_neuron.value
+    for n in graph[::-1]
+    	n.backward()
 
 
