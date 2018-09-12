@@ -1,3 +1,13 @@
+# Jupyter Notebook
 *.ipynb_checkpoints/
 *.idea/
+
+# c++
 *cmake-build-debug
+
+# simulator
+*.zip
+
+# python
+*.pyc
+*.pyo
